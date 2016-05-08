@@ -70,7 +70,7 @@ main(int argc, char *argv[])
 		}
 
 		//CHECK:root directory
-		if(i == ROOTINO && type != 1){
+		if(i == 1 && type != 1){
 			fprintf(stderr,"root directory does not exist\n");
 			return 1;
 		}

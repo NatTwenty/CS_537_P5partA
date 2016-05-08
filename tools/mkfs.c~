@@ -217,8 +217,9 @@ main(int argc, char *argv[])
   }
 
   mkfs(995, 200, 1024);
+printf("here?\n");
   root_dir = opendir(argv[2]);
-
+printf("opendir\n");
   root_inode = ialloc(T_DIR);
   assert(root_inode == ROOTINO);
 
@@ -228,7 +229,7 @@ main(int argc, char *argv[])
   }
 
   balloc(usedblocks);
-
+printf("balloc\n");
   exit(0);
 }
 
