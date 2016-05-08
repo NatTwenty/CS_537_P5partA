@@ -20,21 +20,22 @@ struct superblock{
 };
 
 #define NDIRECT (12)
-
+#define NINDIRECT (BSIZE / sizeof(uint))
+#define MAXFILE (NDIRECT + NINDIRECT)
 
 struct dinode{
 	short type;
 	short major;	//device #
 	short minor;
-	short nlink;
+	short nlink;	//number of links TO THIS inode
 	uint size;
 	uint addrs[NDIRECT+1];	//Datablock addresses
 };
 
 int
 main(int argc, char *argv[])
-{
-	int fd = open("fs.img", O_RDONLY);
+{ 	
+	int fd = open(argv[1], O_RDONLY);
 	assert(fd > -1);
 
 	int rc;
@@ -49,6 +50,8 @@ main(int argc, char *argv[])
 	sb = (struct superblock *)(img_ptr + BSIZE);
 	printf("%d %d %d\n", sb->size, sb->nblocks, sb->ninodes);//TODO debug purposes only
 
+	int range = (int)((sb->size) * BSIZE);//should be the max value of valid addresses
+	printf("%d\n", range);
 
 	//inodes
 	int i;
@@ -63,6 +66,19 @@ main(int argc, char *argv[])
 		//note: 0 => unallocated
 		if(type == 0 || type == 1 || type == 2 || type == 3){
 			printf("%d type: %d\n", i, type);//TODO debug purposes only
+			if(type != 0){
+				int dev = (dip->size)/BSIZE;
+				int mod = (dip->size)%BSIZE;
+				printf("%d.%d\n", dev, mod);
+
+				printf("number of links = %d\nsize = %d\naddresses = ", dip->nlink, dip->size);
+				
+				int j;
+				for(j = 0; j < (NDIRECT+1); j++){
+					printf("%d  ", dip->addrs[j]);
+				}
+				printf("\n\n");
+			}
 			dip++;
 		}else{
 			fprintf(stderr,"bad inode\n");
@@ -70,7 +86,7 @@ main(int argc, char *argv[])
 		}
 
 		//CHECK:root directory
-		if(i == 1 && type != 1){
+		if(i == ROOTINO && type != 1){
 			fprintf(stderr,"root directory does not exist\n");
 			return 1;
 		}
