@@ -97,7 +97,7 @@ main(int argc, char *argv[])
 					block_addr = dip->addrs[j];
 					inode_used[block_addr] = 1;
 					printf("%d  ", dip->addrs[j]);
-					if((dip->addrs[j]) < 1 || (dip->addrs[j]) > range){
+					if((dip->addrs[j]) < 0 || (dip->addrs[j]) > range){//check for 0?
 						printf("\n\n");
 						fprintf(stderr,"bad address in inode\n");
 						return 1;
@@ -114,7 +114,7 @@ main(int argc, char *argv[])
 						if(num != 0){
 							inode_used[num] = 1;
 							printf("%d ", num);
-							if((dip->addrs[j]) < 1 || (dip->addrs[j]) > range){
+							if((dip->addrs[j]) < 0 || (dip->addrs[j]) > range){
 								printf("\n\n");
 								fprintf(stderr,"bad address in inode\n");
 								return 1;
