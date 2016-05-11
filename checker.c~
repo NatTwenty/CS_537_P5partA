@@ -69,7 +69,7 @@ main(int argc, char *argv[])
 			if(type != 0){
 				int dev = (dip->size)/BSIZE;
 				int mod = (dip->size)%BSIZE;
-				printf("%d.%d\n", dev, mod);
+				printf("%d.%d\n", dev, mod);//can use this to get the total number of blocks in use
 
 				printf("number of links = %d\nsize = %d\naddresses = ", dip->nlink, dip->size);
 				
