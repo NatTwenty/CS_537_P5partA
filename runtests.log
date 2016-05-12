@@ -229,15 +229,15 @@ ld  -m    elf_i386 -nostdlib --omagic \
 dd if=/dev/zero of=xv6.img count=10000
 10000+0 records in
 10000+0 records out
-5120000 bytes (5.1 MB) copied, 0.0109877 s, 466 MB/s
+5120000 bytes (5.1 MB) copied, 0.0109896 s, 466 MB/s
 dd if=kernel/bootblock of=xv6.img conv=notrunc
 1+0 records in
 1+0 records out
-512 bytes (512 B) copied, 6.9377e-05 s, 7.4 MB/s
+512 bytes (512 B) copied, 6.5779e-05 s, 7.8 MB/s
 dd if=kernel/kernel of=xv6.img seek=1 conv=notrunc
 253+1 records in
 253+1 records out
-129540 bytes (130 kB) copied, 0.000266225 s, 487 MB/s
+129540 bytes (130 kB) copied, 0.000269166 s, 481 MB/s
 gcc -c  -iquote include -Wall -Werror -ggdb  -o tools/mkfs.o tools/mkfs.c
 gcc  tools/mkfs.o -o tools/mkfs
 mkdir -p fs
@@ -297,23 +297,23 @@ ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --o
 cp user/bin/zombie fs/zombie
 ./tools/mkfs fs.img fs
 used 29 (bit 1 ninode 26) free 29 total 1024
-stressfs
-cat
-rm
-ls
-mkdir
-zombie
-wc
-init
 kill
-sh
-grep
-usertests
-README
-ln
-tester
+zombie
+mkdir
+ls
 echo
+README
+init
+ln
+wc
+rm
+tester
+usertests
+stressfs
+grep
+cat
 forktest
+sh
 balloc: first 419 blocks have been allocated
 balloc: write bitmap block at sector 28
 gcc -Wall -Werror -ggdb    fscheck.c   -o fscheck
@@ -331,7 +331,7 @@ Test good
 run on a good filesystem
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/good
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/good
 
 
 test good PASSED (5 of 5)
@@ -345,7 +345,7 @@ Test goodrefcnt
 run on fs with only good reference counts
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/goodrefcnt
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/goodrefcnt
 
 
 test goodrefcnt PASSED (5 of 5)
@@ -359,7 +359,7 @@ Test nonexistant
 run on a nonexistant filesystem
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/nonexistant
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/nonexistant
 
 
 test nonexistant PASSED (5 of 5)
@@ -373,7 +373,7 @@ Test badroot
 run on a filesystem with a root directory in bad location
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badroot
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badroot
 
 
 test badroot PASSED (5 of 5)
@@ -387,7 +387,7 @@ Test badinode
 run on a filesystem with a bad type in an inode
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badinode
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badinode
 
 
 test badinode PASSED (5 of 5)
@@ -401,7 +401,7 @@ Test badaddr
 run on a filesystem with a bad direct address in an inode
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badaddr
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badaddr
 
 
 test badaddr PASSED (5 of 5)
@@ -415,7 +415,7 @@ Test badindir1
 run on a filesystem with a bad indirect address in an inode
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir1
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir1
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -437,7 +437,7 @@ Test badroot2
 run on a filesystem with a bad root directory in good location
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badroot2
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badroot2
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -459,7 +459,7 @@ Test badfmt
 run on a filesystem without . or .. directories
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badfmt
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badfmt
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -481,7 +481,7 @@ Test mismatch
 run on a filesystem with .. pointing to the wrong directory
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mismatch
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mismatch
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -503,7 +503,7 @@ Test mrkfree
 run on a filesystem with an inuse direct block marked free
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mrkfree
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mrkfree
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -525,7 +525,7 @@ Test indirfree
 run on a filesystem with an inuse indirect block marked free
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/indirfree
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/indirfree
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -547,7 +547,7 @@ Test mrkused
 run on a filesystem with a free block marked used
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mrkused
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/mrkused
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -569,7 +569,7 @@ Test addronce
 run on a filesystem with an address used more than once
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/addronce
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/addronce
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -591,7 +591,7 @@ Test imrkused
 run with inode marked used, but not referenced in a directory
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/imrkused
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/imrkused
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -613,7 +613,7 @@ Test imrkfree
 run with inode marked free, but referenced in a directory
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/imrkfree
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/imrkfree
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -635,7 +635,7 @@ Test badrefcnt
 run on fs which has an inode with a bad reference count
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badrefcnt
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badrefcnt
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -657,19 +657,11 @@ Test badindir2
 run on a filesystem with a bad indirect address in an inode
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir2
-Failure: ./fscheck returned incorrect status code. Expected 1 got 0
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir2
 
 
-test badindir2 FAILED (0 of 5)
+test badindir2 PASSED (5 of 5)
  (run on a filesystem with a bad indirect address in an inode)
- ./fscheck returned incorrect status code. Expected 1 got 0
-
- Test it yourself by running
- fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir2
- and check out the test folder
- /u/c/s/cs537-1/ta/tests/5a/err/badindir2
- to compare your error output with reference outputs. 
 
 starting dironce
 
@@ -679,7 +671,7 @@ Test dironce
 run on fs with a directory appearing more than once
 
 **********************************************************************
-/tmp/tmp64auJh/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/dironce
+/tmp/tmpmbSmqQ/p/./fscheck /u/c/s/cs537-1/ta/tests/5a/images/dironce
 Failure: ./fscheck returned incorrect status code. Expected 1 got 0
 
 
@@ -826,15 +818,8 @@ test badrefcnt FAILED (0 of 5)
  /u/c/s/cs537-1/ta/tests/5a/err/badrefcnt
  to compare your error output with reference outputs. 
 
-test badindir2 FAILED (0 of 5)
+test badindir2 PASSED (5 of 5)
  (run on a filesystem with a bad indirect address in an inode)
- ./fscheck returned incorrect status code. Expected 1 got 0
-
- Test it yourself by running
- fscheck /u/c/s/cs537-1/ta/tests/5a/images/badindir2
- and check out the test folder
- /u/c/s/cs537-1/ta/tests/5a/err/badindir2
- to compare your error output with reference outputs. 
 
 test dironce FAILED (0 of 5)
  (run on fs with a directory appearing more than once)
@@ -846,6 +831,6 @@ test dironce FAILED (0 of 5)
  /u/c/s/cs537-1/ta/tests/5a/err/dironce
  to compare your error output with reference outputs. 
 
-Passed 7 of 20 tests.
-Overall 7 of 20
-Points 30 of 95
+Passed 8 of 20 tests.
+Overall 8 of 20
+Points 35 of 95
