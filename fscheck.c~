@@ -31,14 +31,16 @@ struct dinode{
 */
 
 
-
 int
 main(int argc, char *argv[])
 {
 
 	
 	int fd = open(argv[1], O_RDONLY);
-	assert(fd > -1);
+	if(fd == -1){
+		fprintf(stderr,"image not found.\n");
+		return 1;
+	}
 
 	int rc;
 	struct stat sbuf;
@@ -50,7 +52,7 @@ main(int argc, char *argv[])
 
 	struct superblock *sb;
 	sb = (struct superblock *)(img_ptr + BSIZE);
-	printf("%d %d %d\n", sb->size, sb->nblocks, sb->ninodes);//TODO debug purposes only
+	//printf("%d %d %d\n", sb->size, sb->nblocks, sb->ninodes);//TODO debug purposes only
 
 
 	int range = (int)((sb->size) * BSIZE);//should be the max value of valid addresses
@@ -66,6 +68,12 @@ main(int argc, char *argv[])
 	int inode_used[sb->nblocks];
 	int block_addr, num;
 
+//
+	for(i = 0; i <= BBLOCK(sb->nblocks, sb->ninodes); i++)
+		inode_used[i] = 1; 
+//
+
+
 	for(i = 0; i< sb->ninodes; i++){
 		short type = dip->type;
 		//CHECK:valid inodes
@@ -74,13 +82,13 @@ main(int argc, char *argv[])
 		//			T_DEV (special device) = 3
 		//note: 0 => unallocated
 		if(type == 0 || type == 1 || type == 2 || type == 3){
-			printf("%d type: %d\n", i, type);//TODO debug purposes only
+			//printf("%d type: %d\n", i, type);//TODO debug purposes only
 			if(type != 0){
 				inode_used[i] = 1;
 				int dev = (dip->size)/BSIZE;
 				int mod = (dip->size)%BSIZE;
-				printf("%d.%d\n", dev, mod);//can use this to get the total number of blocks in use
-				
+				//printf("%d.%d\n", dev, mod);//can use this to get the total number of blocks in use
+				int d = dev;
 				if(mod > 0){
 					dev++;//total number of blocks in use
 				}
@@ -90,33 +98,48 @@ main(int argc, char *argv[])
 				
 				
 
-				printf("number of links = %d\nsize = %d\naddresses = ", dip->nlink, dip->size);
+				//printf("number of links = %d\nsize = %d\naddresses = ", dip->nlink, dip->size);
 				
 				int j;
 				for(j = 0; j < (NDIRECT+1); j++){
 					block_addr = dip->addrs[j];
-					inode_used[block_addr] = 1;
-					printf("%d  ", dip->addrs[j]);
-					if((dip->addrs[j]) > range){//check for 0?
-						printf("\n\n");
-						fprintf(stderr,"bad address in inode\n");
+					//inode_used[block_addr] = 1;
+/*
+					if(block_addr != 0){
+						if(inode_used[block_addr] == 1){
+							fprintf(stderr, "ERROR: address used more than once.\n"); //test
+							return 1;
+						}
+						inode_used[block_addr] = 1;
+					}
+*/
+					//printf("%d  ", dip->addrs[j]);
+					if((dip->addrs[j]) < 0 || (dip->addrs[j]) > range){//check for 0?
+						//printf("\n\n");
+						fprintf(stderr,"ERROR: bad address in inode.\n");
 						return 1;
 					}
 				}
-				printf("\n");
-				if(dev > NDIRECT){
+				//printf("\n");
+				if(d > NDIRECT){
 					
-					printf("EXTRA BLOCK\n");					
+					//printf("INDIRECT BLOCK\n");					
 					
 					int *start_addr = (int*)(img_ptr + (block_addr*BSIZE));
 					for(j = 0; j < BSIZE/4; j++){
 						num = *(start_addr + j);
 						if(num != 0){
+/*
+							if(inode_used[num] == 1){
+								fprintf(stderr, "ERROR: address used more than once.\n");
+								return 1;
+							}
+*/
 							inode_used[num] = 1;
-							printf("%d ", num);
-							if((dip->addrs[j]) > range){
-								printf("\n\n");
-								fprintf(stderr,"bad address in inode\n");
+							//printf("%d ", num);
+							if((dip->addrs[j]) < 0 || (dip->addrs[j]) > range){
+								//printf("\n\n");
+								fprintf(stderr,"ERROR: bad address in inode.\n");
 								return 1;
 							}
 						}
@@ -124,17 +147,17 @@ main(int argc, char *argv[])
 
 					
 				}
-				printf("\n\n");
+				//printf("\n\n");
 			}
 			dip++;
 		}else{
-			fprintf(stderr,"bad inode\n");
+			fprintf(stderr,"ERROR: bad inode.\n");
 			return 1;
 		}
 
 		//CHECK:root directory
 		if(i == ROOTINO && type != 1){
-			fprintf(stderr,"root directory does not exist\n");
+			fprintf(stderr,"ERROR: root directory does not exist.\n");
 			return 1;
 		}
 		
@@ -215,11 +238,11 @@ main(int argc, char *argv[])
 	for(i = 0; i < (sb->nblocks); i++){
 		
 		if((bitmap[i] == 0) & (inode_used[i] == 1)){
-			fprintf(stderr,"BLOCK %d: address used by inode but marked free in bitmap\n", i);
+			fprintf(stderr,"BLOCK %d: address used by inode but marked free in bitmap.\n", i);
 			return 1;
 		}
 		if((bitmap[i] == 1) & (inode_used[i] == 0)){
-			fprintf(stderr,"BLOCK %d: bitmap marks block in use but it is not in use\n", i);
+			fprintf(stderr,"BLOCK %d: bitmap marks block in use but it is not in use.\n", i);
 			return 1;
 		}
 			
