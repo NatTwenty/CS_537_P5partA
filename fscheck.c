@@ -63,7 +63,7 @@ main(int argc, char *argv[])
 //printf("%d  %d\n", sb->nblocks, (int)(IPB));
 
 //
-	//int bitmap[sb->nblocks];
+	int bitmap[sb->nblocks];
 //
 	int inode_used[sb->nblocks];
 	int p;
@@ -72,10 +72,10 @@ main(int argc, char *argv[])
 	}
 	int block_addr, num;
 
-/*/
+//
 	for(i = 0; i <= BBLOCK(sb->nblocks, sb->ninodes); i++)
 		inode_used[i] = 1; 
-/*/
+//
 
 	for(i = 0; i< sb->ninodes; i++){
 		short type = dip->type;
@@ -113,13 +113,13 @@ main(int argc, char *argv[])
 
 					inode_used[block_addr] = 1;
 					//printf("%d  ", dip->addrs[j]);
-if(dip->addrs[j] != 0){
-					if((dip->addrs[j]) < 29 || (dip->addrs[j]) > range){//0
-						//printf("%d\n%d\n", dip->addrs[j], temp);
-						fprintf(stderr,"ERROR: bad address in inode.\n");
-						return 1;
+					if(dip->addrs[j] != 0){
+						if((dip->addrs[j]) < 29 || (dip->addrs[j]) > range){//0
+							//printf("%d\n%d\n", dip->addrs[j], temp);
+							fprintf(stderr,"ERROR: bad address in inode.\n");
+							return 1;
+						}
 					}
-}
 				}
 //printf("\n\n");
 				if(dev > NDIRECT){				
@@ -156,7 +156,8 @@ if(dip->addrs[j] != 0){
 			return 1;
 		}
 
-		//CHECK:root directory
+		//CHECK:root directory-
+
 		if(i == ROOTINO){
 			if(type != 1){
 				fprintf(stderr,"ERROR: root directory does not exist.\n");
@@ -168,7 +169,7 @@ if(dip->addrs[j] != 0){
 	}
 
 	//printf("uint size = %d", (int)sizeof(uint));
-/*/	
+//	
 	int bitmap_block, j, n_block;
 	uint *dbmp_addr;
 	bitmap_block = BBLOCK(0, sb->ninodes);
@@ -176,7 +177,7 @@ if(dip->addrs[j] != 0){
 	dbmp_addr = (uint*)(img_ptr + (bitmap_block*BSIZE));
 	
 	uint word, bit, mask, word_mask;
-/*/
+//
 	/*
 	for(i = 0; i < (sb->nblocks)/32; i++){
 		
@@ -192,72 +193,72 @@ if(dip->addrs[j] != 0){
 	}
 	*/
 	
-
-/*/
+	
+//
 	for(i = 0; i < ((sb->nblocks)/32+1); i++){
 		word = *(dbmp_addr+i);
 		if(i <31){
 			for(j = 0; j < 32; j++){
 				n_block = (i*32)+(j);
-				//printf("%d ",n_block);
+//				printf("%d ",n_block);
 				mask = (0x1 << j);
-				//printf("mask: %x ",mask);
+//				printf("mask: %x ",mask);
 				
-				//printf("word: %x ",word);
+//				printf("word: %x ",word);
 				word_mask = word & mask;
-				//printf("masked word: %x ",word_mask);
+//				printf("masked word: %x ",word_mask);
 				bit = word_mask >> j; 
-				//printf("data bitmap: %x\n", bit);
+//				printf("data bitmap: %x\n", bit);
 		
-				if(bit == 1){
+				if(bit == 1)
 					bitmap[n_block] = 1;
-
-				}
+				else
+					bitmap[n_block] = 0;
+				
 			
 			}
 		}
 		else {
 			for(j = 0; j < (sb->nblocks % 32); j++){
 				n_block = (i*32)+(j);
-				//printf("%d ",n_block);
+//				printf("%d ",n_block);
 				mask = (0x1 << j);
-				//printf("mask: %x ",mask);
+//				printf("mask: %x ",mask);
 				word = *(dbmp_addr+i);
-				//printf("word: %x ",word);
+//				printf("word: %x ",word);
 				word = word & mask;
-				//printf("masked word: %x ",word);
+//				printf("masked word: %x ",word);
 				bit = word >> j;
-				//printf("data bitmap: %x\n", bit);
+//				printf("data bitmap: %x\n", bit);
 		
-				if(bit == 1){
+				if(bit == 1)
 					bitmap[n_block] = 1;
-
-				}
+				else
+					bitmap[n_block] = 0;
+				
 			
 			}
 
 		}
 	}
-/*/
-	/*
+//
+	
 	for(i = 0; i < (sb->nblocks); i++){
 		
 		if((bitmap[i] == 0) && (inode_used[i] == 1)){
+//printf("marked free\n");
 			fprintf(stderr,"ERROR: address used by inode but marked free in bitmap.\n");
 			return 1;
 		}
 		if((bitmap[i] == 1) && (inode_used[i] == 0)){
+//printf("bitmap = %d\ninode = %d\n",bitmap[i], inode_used[i]);
+//printf("not in use\n%d\n", i);
 			fprintf(stderr,"ERROR: bitmap marks block in use but it is not in use.\n");
 			return 1;
 		}
 			
 		
 	}
-*/
-
-	//bitmap
-
-	//other
 
 
 	return 0;
