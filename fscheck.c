@@ -72,10 +72,10 @@ main(int argc, char *argv[])
 	}
 	int block_addr, num;
 
-//
+/*/
 	for(i = 0; i <= BBLOCK(sb->nblocks, sb->ninodes); i++)
 		inode_used[i] = 1; 
-//
+/*/
 
 	for(i = 0; i< sb->ninodes; i++){
 		short type = dip->type;
@@ -101,9 +101,11 @@ main(int argc, char *argv[])
 				for(j = 0; j < (NDIRECT+1); j++){
 					block_addr = dip->addrs[j];
 					
+//printf("#%d ", block_addr);
 
 					if(block_addr != 0){
 						if(inode_used[block_addr] == 1){
+//printf("#####\n");
 							fprintf(stderr, "ERROR: address used more than once.\n");
 							return 1;
 						}
@@ -111,31 +113,33 @@ main(int argc, char *argv[])
 
 					inode_used[block_addr] = 1;
 					//printf("%d  ", dip->addrs[j]);
-
-					if((dip->addrs[j]) < 0 || (dip->addrs[j]) > range){//0
+if(dip->addrs[j] != 0){
+					if((dip->addrs[j]) < 29 || (dip->addrs[j]) > range){//0
 						//printf("%d\n%d\n", dip->addrs[j], temp);
 						fprintf(stderr,"ERROR: bad address in inode.\n");
 						return 1;
 					}
+}
 				}
-//printf("\n");
+//printf("\n\n");
 				if(dev > NDIRECT){				
 					
 //printf("%d\n", block_addr);
 					int *start_addr = (int*)(img_ptr + (block_addr*BSIZE));
 					for(j = 0; j < BSIZE/4; j++){
 						num = *(start_addr + j);
+//printf("%d ", num);
 						if(num != 0){
-							//printf("%d ", num);
+							//printf("*%d ", num);
 
 							if(inode_used[num] == 1){
-printf("indirect\n");
+//printf("******\n");
 								fprintf(stderr, "ERROR: address used more than once.\n");
 								return 1;
 							}
 
 							inode_used[num] = 1;
-							if(num < 0 || num > range){//0
+							if(num < 29 || num > range){//0
 
 								//printf("%d\n%d\n", dip->addrs[j], temp);
 								fprintf(stderr,"ERROR: bad address in inode.\n");
@@ -143,7 +147,7 @@ printf("indirect\n");
 							}
 						}
 					}
-//printf("\n");	
+//printf("\n\n");	
 				}
 			}
 			dip++;
